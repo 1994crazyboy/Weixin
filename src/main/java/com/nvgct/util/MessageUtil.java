@@ -1,8 +1,6 @@
 package com.nvgct.util;
 
-import com.nvgct.po.News;
-import com.nvgct.po.NewsMessage;
-import com.nvgct.po.TextMessage;
+import com.nvgct.po.*;
 import com.thoughtworks.xstream.XStream;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -76,6 +74,17 @@ public class MessageUtil {
         xStream.alias("xml", newsMessage.getClass());
         xStream.alias("item", new News().getClass());
         return xStream.toXML(newsMessage);
+    }
+
+    /**
+     * 将ImageMessage转换为xml类型的信息
+     * @param imageMessage
+     * @return
+     */
+    public static String imageMessageToXml(ImageMessage imageMessage){
+        XStream xStream = new XStream();
+        xStream.alias("xml", imageMessage.getClass());
+        return xStream.toXML(imageMessage);
     }
 
     /**
@@ -163,6 +172,28 @@ public class MessageUtil {
 
         message = newsMessageToXml(newsMessage);
 
+        return message;
+    }
+
+    /**
+     * 初始化图片消息
+     * @param toUserName
+     * @param fromUserName
+     * @return
+     */
+    public static String initImageMessage(String toUserName, String fromUserName){
+        String message=null;
+
+        ImageMessage imageMessage=new ImageMessage();
+        Image image=new Image();
+        image.setMediaId("SwEny8aMl0j-BO45sEu-k5hfHOkuCIZRbvxjDd-nMvNxbxPbQ6v4AApu83F4cbu3");
+        imageMessage.setImage(image);
+        imageMessage.setCreateTime(new Date().getTime());
+        imageMessage.setFromUserName(toUserName);
+        imageMessage.setMsgType(MessageUtil.MESSAGE_IMAGE);
+        imageMessage.setToUserName(fromUserName);
+
+        message=imageMessageToXml(imageMessage);
         return message;
     }
 

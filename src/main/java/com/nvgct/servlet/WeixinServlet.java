@@ -38,6 +38,8 @@ public class WeixinServlet extends javax.servlet.http.HttpServlet {
                     message = MessageUtil.initTextMessage(toUserName, fromUserName, MessageUtil.getMainMenu());
                 } else if (content.equals("tw")) {
                     message = MessageUtil.initNewsMessage(toUserName, fromUserName);
+                } else if(content.equals("img")){
+                    message = MessageUtil.initImageMessage(toUserName,fromUserName);
                 } else {
                     message = MessageUtil.initTextMessage(toUserName, fromUserName, "你大爷的不按常理出牌，老实点，我可是知道你在干嘛的！");
                 }
