@@ -1,6 +1,10 @@
 package com.nvgct.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.nvgct.menu.Button;
+import com.nvgct.menu.ClickButton;
+import com.nvgct.menu.Menu;
+import com.nvgct.menu.ViewButton;
 import com.nvgct.po.AccessToken;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,7 +30,7 @@ public class WeixinUtil {
 
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
     private static final String UPLOAD_URL="https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
-
+    private static final String CREATE_MENU_URL="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
 
     /**
      * get请求
@@ -95,6 +99,17 @@ public class WeixinUtil {
         return token;
     }
 
+    /**
+     * 上传文件
+     * @param filePath
+     * @param accessToken
+     * @param type
+     * @return
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchProviderException
+     * @throws KeyManagementException
+     */
     public static String upload(String filePath, String accessToken,String type) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, KeyManagementException {
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()) {
@@ -181,6 +196,59 @@ public class WeixinUtil {
         }
         String mediaId = jsonObj.getString(typeName);
         return mediaId;
+    }
+
+    /**
+     * 组装菜单
+     * @return
+     */
+    public static Menu initMenu(){
+        Menu menu=new Menu();
+        ClickButton button11=new ClickButton();
+        button11.setName("Click菜单");
+        button11.setType("click");
+        button11.setKey("11");
+
+        ViewButton button21=new ViewButton();
+        button21.setType("view");
+        button21.setName("View菜单");
+        button21.setUrl("http://www.hyn123.cn");
+
+        ClickButton button31=new ClickButton();
+        button31.setName("扫描二维码");
+        button31.setType("scancode_push");
+        button31.setKey("31");
+
+        ClickButton button32=new ClickButton();
+        button32.setName("拍照咯");
+        button32.setType("pic_sysphoto");
+        button32.setKey("32");
+
+        ClickButton button33=new ClickButton();
+        button33.setName("发送地理位置");
+        button33.setKey("33");
+        button33.setType("location_select");
+
+        Button button=new Button();
+        button.setName("菜单");
+        button.setSub_button(new Button[]{button31,button32,button33});
+
+        menu.setButton(new Button[]{button11,button21,button});
+
+        return menu;
+
+    }
+
+
+    public static int createMenu(String token,String menu){
+        int result=0;
+        String url=CREATE_MENU_URL.replace("ACCESS_TOKEN",token);
+        JSONObject jsonObject=doPostStr(url,menu);
+        if(jsonObject!=null){
+            result=jsonObject.getInteger("errcode");
+        }
+
+        return result;
     }
 
 }

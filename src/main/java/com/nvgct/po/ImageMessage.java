@@ -9,7 +9,6 @@ public class ImageMessage extends BaseMessage {
     public com.nvgct.po.Image getImage() {
         return Image;
     }
-
     public void setImage(com.nvgct.po.Image image) {
         Image = image;
     }

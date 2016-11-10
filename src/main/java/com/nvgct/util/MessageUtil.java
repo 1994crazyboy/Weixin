@@ -21,11 +21,17 @@ public class MessageUtil {
     public static final String MESSAGE_IMAGE="image";
     public static final String MESSAGE_VOICE="voice";
     public static final String MESSAGE_VIDEO="video";
+    public static final String MESSAGE_MUSIC="music";
     public static final String MESSAGE_SHORTVIDEO="shortvideo";
     public static final String MESSAGE_LOCATION="location";
     public static final String MESSAGE_LINK="link";
     public static final String MESSAGE_EVENT="event";
     public static final String MESSAGE_SUBSCRIBE = "subscribe";
+    public static final String MESSAGE_UNSUBSCRIBE="unsubscribe";
+    public static final String MESSAGE_CLICK="CLICK";
+    public static final String MESSAGE_VIEW="VIEW";
+    public static final String MESSAGE_SCANCODE="scancode_push";
+
 
 
     /***
@@ -88,6 +94,17 @@ public class MessageUtil {
     }
 
     /**
+     * 将音乐消息对象转换为xml
+     * @param musicMessage
+     * @return
+     */
+    public static String musicMessageToXml(MusicMessage musicMessage){
+        XStream xStream = new XStream();
+        xStream.alias("xml", musicMessage.getClass());
+        return xStream.toXML(musicMessage);
+    }
+
+    /**
      * 获取主菜单
      *
      * @return
@@ -99,6 +116,8 @@ public class MessageUtil {
         sb.append("2.查看当前位置。\n");
         sb.append("3.查看帮助。\n");
         sb.append("tw.查看图文消息。\n");
+        sb.append("img.查看苍老师图片。\n");
+        sb.append("music.听小苹果。\n");
         sb.append("回复0，返回主菜单！");
 
         return sb.toString();
@@ -194,6 +213,34 @@ public class MessageUtil {
         imageMessage.setToUserName(fromUserName);
 
         message=imageMessageToXml(imageMessage);
+        return message;
+    }
+
+    /**
+     * 初始化音乐消息
+     * @param toUserName
+     * @param fromUserName
+     * @return
+     */
+    public static String initMusicMessage(String toUserName,String fromUserName){
+        String message=null;
+
+        MusicMessage musicMessage=new MusicMessage();
+        Music music=new Music();
+        music.setTitle("小苹果");
+        music.setDescription("筷子兄弟-猛龙过江-小苹果");
+        music.setHQMusicUrl("http://nvgct.com/Weixin/music/xpg.mp3");
+        music.setMusicUrl("http://nvgct.com/Weixin/music/xpg.mp3");
+        music.setThumbMediaId("SwEny8aMl0j-BO45sEu-k5hfHOkuCIZRbvxjDd-nMvNxbxPbQ6v4AApu83F4cbu3");
+
+        musicMessage.setMsgType(MessageUtil.MESSAGE_MUSIC);
+        musicMessage.setCreateTime(new Date().getTime());
+        musicMessage.setToUserName(fromUserName);
+        musicMessage.setFromUserName(toUserName);
+        musicMessage.setMusic(music);
+
+        message=musicMessageToXml(musicMessage);
+
         return message;
     }
 

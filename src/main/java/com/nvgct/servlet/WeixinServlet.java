@@ -40,6 +40,8 @@ public class WeixinServlet extends javax.servlet.http.HttpServlet {
                     message = MessageUtil.initNewsMessage(toUserName, fromUserName);
                 } else if(content.equals("img")){
                     message = MessageUtil.initImageMessage(toUserName,fromUserName);
+                } else if(content.equals("music")){
+                    message=MessageUtil.initMusicMessage(toUserName,fromUserName);
                 } else {
                     message = MessageUtil.initTextMessage(toUserName, fromUserName, "你大爷的不按常理出牌，老实点，我可是知道你在干嘛的！");
                 }
@@ -52,7 +54,17 @@ public class WeixinServlet extends javax.servlet.http.HttpServlet {
                 String eventType = map.get("Event");
                 if (eventType.equals(MessageUtil.MESSAGE_SUBSCRIBE)) {
                     message = MessageUtil.initTextMessage(toUserName, fromUserName, MessageUtil.getMainMenu());
+                }else if(MessageUtil.MESSAGE_CLICK.equals(eventType)){
+                    message=MessageUtil.initTextMessage(toUserName,fromUserName,MessageUtil.getMainMenu());
+                }else if(MessageUtil.MESSAGE_SCANCODE.equals(eventType)){
+//                    String url=map.get("EventKey");
+                    message=MessageUtil.initTextMessage(toUserName,fromUserName,"扫码事件：\n"+map.toString());
+                }else if(MessageUtil.MESSAGE_VIEW.equals(eventType)){
+                    String url=map.get("EventKey");
+                    message=MessageUtil.initTextMessage(toUserName,fromUserName,url);
                 }
+            } else if(MessageUtil.MESSAGE_LOCATION.equals(msgType)){
+                message=MessageUtil.initTextMessage(toUserName,fromUserName,"地理位置：\n"+map.toString());
             }
 
 //            System.out.println(message);
